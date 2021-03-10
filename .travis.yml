@@ -1,0 +1,26 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t sleepingsnorlax/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true sleepingsnorlax/react-test npm test
+
+after_success:
+  - docker build -t sleepingsnorlax/multi-client ./client
+  - docker build -t sleepingsnorlax/multi-nginx ./nginx
+  - docker build -t sleepingsnorlax/multi-server ./server
+  - docker build -t sleepingsnorlax/multi-worker ./worker
+  # Login to docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin 
+  # Push images to Docker Hub
+  - docker push sleepingsnorlax/multi-client
+  - docker push sleepingsnorlax/multi-nginx
+  - docker push sleepingsnorlax/multi-server
+  - docker push sleepingsnorlax/multi-worker
+
+
+
+
