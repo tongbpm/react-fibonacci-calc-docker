@@ -22,6 +22,17 @@ after_success:
   - docker push sleepingsnorlax/multi-server
   - docker push sleepingsnorlax/multi-worker
 
-
+deploy:
+  edge: true  
+  provider: elasticbeanstalk
+  region: us-east-1
+  app: multi-docker
+  env: Multidocker-env
+  bucket_name: elasticbeanstalk-us-east-1-998124527899
+  bucket_path: docker-multi
+  on:
+    branch: main
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
 
 
